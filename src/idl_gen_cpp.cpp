@@ -508,7 +508,7 @@ void CloseNestedNameSpaces(Namespace *ns, std::string *code_ptr) {
 
 namespace {
 
-std::string GenerateZEQ(const Parser &parser, const std::string &file_name)
+std::string GenerateZeroEQ(const Parser &parser, const std::string &file_name)
 {
     // Generate include guard.
     std::string include_guard_ident = file_name;
@@ -536,7 +536,7 @@ std::string GenerateZEQ(const Parser &parser, const std::string &file_name)
     code += "#ifndef " + include_guard + "\n";
     code += "#define " + include_guard + "\n\n";
 
-    code += "#include <zeq/vocabulary.h>\n\n";
+    code += "#include <zeroeq/vocabulary.h>\n\n";
 
     cpp::GenerateNestedNameSpaces(name_space, &code);
 
@@ -554,9 +554,9 @@ std::string GenerateZEQ(const Parser &parser, const std::string &file_name)
         code += "\";\n\n";
 
         code += "/** @addtogroup Events\n * Supported events by the vocabulary */\n//@{\n";
-        code += "static const ::zeq::uint128_t EVENT_";
+        code += "static const ::zeroeq::uint128_t EVENT_";
         code += upperName;
-        code += " = ::zeq::make_uint128(\"";
+        code += " = ::zeroeq::make_uint128(\"";
         for (auto it = name_space->components.begin();
              it != name_space->components.end(); ++it) {
                 code += *it + "::";
@@ -587,7 +587,7 @@ std::string GenerateZEQ(const Parser &parser, const std::string &file_name)
         code += " {\n";
         code += "    Register";
         code += structdef->name;
-        code += "() { ::zeq::vocabulary::registerEvent(EVENT_";
+        code += "() { ::zeroeq::vocabulary::registerEvent(EVENT_";
         code += upperName;
         code += ", SCHEMA_";
         code += upperName;
@@ -774,14 +774,14 @@ bool GenerateCPP(const Parser &parser,
            SaveFile((path + file_name + "_generated.h").c_str(), code, false);
 }
 
-bool GenerateZEQ(const Parser &parser,
+bool GenerateZeroEQ(const Parser &parser,
                  const std::string &path,
                  const std::string &file_name,
                  const GeneratorOptions &/*opts*/) {
-    const std::string zeq_file_name = file_name + "_zeq";
-    auto code = GenerateZEQ(parser, zeq_file_name);
+    const std::string zeroeq_file_name = file_name + "_zeroeq";
+    auto code = GenerateZeroEQ(parser, zeroeq_file_name);
     return !code.length() ||
-           SaveFile((path + zeq_file_name + "_generated.h").c_str(), code, false);
+      SaveFile((path + zeroeq_file_name + "_generated.h").c_str(), code, false);
 }
 
 }  // namespace flatbuffers
