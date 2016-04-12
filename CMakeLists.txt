@@ -117,6 +117,12 @@ if(FLATBUFFERS_BUILD_TESTS)
   file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/tests" DESTINATION
        "${CMAKE_CURRENT_BINARY_DIR}")
   add_test(NAME flattests COMMAND flattests)
+
+  # 'tests' target needed by BBP Jenkins CI
+  if(NOT TARGET tests)
+    add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS flattests)
+    set_target_properties(tests PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD ON)
+  endif()
 endif()
 
 
