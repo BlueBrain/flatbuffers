@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
-
-project(FlatBuffers)
-set(FlatBuffers_VERSION 1.0.0)
+if(CMAKE_VERSION VERSION_LESS 3.0)
+  project(FlatBuffers)
+  set(FlatBuffers_VERSION 1.0.0)
+else()
+  cmake_policy(SET CMP0048 NEW)
+  project(FlatBuffers VERSION 1.0.0)
+endif()
 
 # NOTE: Code coverage only works on Linux & OSX.
 option(FLATBUFFERS_CODE_COVERAGE "Enable the code coverage build option." OFF)
@@ -119,9 +123,14 @@ if(FLATBUFFERS_BUILD_TESTS)
   add_test(NAME flattests COMMAND flattests)
 
   # 'tests' target needed by BBP Jenkins CI
+  if(NOT TARGET ${PROJECT_NAME}-tests)
+    add_custom_target(${PROJECT_NAME}-tests COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS flattests)
+    set_target_properties(${PROJECT_NAME}-tests PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD ON)
+  endif()
   if(NOT TARGET tests)
-    add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS flattests)
+    add_custom_target(tests)
     set_target_properties(tests PROPERTIES EXCLUDE_FROM_DEFAULT_BUILD ON)
+    add_dependencies(tests ${PROJECT_NAME}-tests)
   endif()
 endif()
 
