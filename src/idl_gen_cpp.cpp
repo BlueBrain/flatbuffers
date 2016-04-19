@@ -580,21 +580,6 @@ std::string GenerateZeroEQ(const Parser &parser, const std::string &file_name)
                 code += *it + "::";
         }
         code += "\";\n\n";
-
-        code += "namespace {\n";
-        code += "  struct Register";
-        code += structdef->name;
-        code += " {\n";
-        code += "    Register";
-        code += structdef->name;
-        code += "() { ::zeroeq::vocabulary::registerEvent(EVENT_";
-        code += upperName;
-        code += ", SCHEMA_";
-        code += upperName;
-        code += "); }\n";
-        code += "  } register";
-        code += structdef->name;
-        code += ";\n}\n\n";
     }
 
     cpp::CloseNestedNameSpaces(name_space, &code);
